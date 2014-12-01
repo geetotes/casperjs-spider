@@ -38,6 +38,11 @@ var config = (function(window,document,undefined){
   // override userAgent if necessary
   config.userAgent = null;
 
+	// download HTML
+	config.downloadPages = false;
+	// html directory
+	config.downloadDirectory = './download/';
+
 
   return config;
 

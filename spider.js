@@ -82,7 +82,6 @@
 
     // Open the URL and modify
     casper.open(url).then(function() {
-
       // ##################  Setup Link Data  #################
 
       // Get current response status of URL
@@ -113,6 +112,27 @@
         });
         return links;
       });
+
+      // ################## Download Page (optional) ##########
+      var downloadPages = casper.cli.get('download-pages') || config.downloadPages;
+      var downloadDirectory = casper.cli.get('download-directory') || config.downloadDirectory;
+      var relativeUrl = url.split(baseUrl)[1];
+      var filename = downloadDirectory + relativeUrl + '.html';
+      this.evaluate(function() {
+        __utils__.findAll('a[href]').forEach(function(e) {
+          origHref = e.getAttribute('href');
+          e.setAttribute('href', escape(origHref) + '.html');
+        });
+      });
+
+
+      var html = this.getHTML();
+      fs.write(filename, html, "w");
+
+
+      this.echo('Downloading ' + url);
+      this.wait(5000);
+
 
       // iterate through each localLink
       this.each(localLinks, function(self, link) {
